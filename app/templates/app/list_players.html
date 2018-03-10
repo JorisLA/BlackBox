@@ -1,0 +1,19 @@
+{% extends "app/base.html" %}
+
+{% block content %}
+  {% if list_players and team_id %}
+    <ul>
+      {% for player in list_players %}
+        <li>
+          <a href="{% url 'info_player' team_id=team_id player_id=player.id %}">{{ player.player_name }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+    <form action="{% url 'send_report' team_id=team_id%}" method="post">
+      {% csrf_token %}
+      <input type="submit" value="Send" />
+    </form>
+  {% else %}
+    <p No players in this team. </p>
+  {% endif %}
+{% endblock %}

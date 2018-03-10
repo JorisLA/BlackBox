@@ -1,0 +1,28 @@
+{% extends "app/base.html" %}
+
+{% block content %}
+  {% if info_player %}
+    <table>
+        <tr>
+          <th>Name</th>
+          <th>Monthly fine</th>
+          <th>Total fine</th>
+          <th>Add a fine</th>
+        </tr>
+        <tr>
+          <td>{{ info_player.player_name }}</td>
+          <td>{{ info_player.monthly_fine }}</td>
+          <td>{{ info_player.total_fine }}</td>
+          <td>
+            <form action="{% url 'fine_player' team_id=team_id player_id=info_player.id %}" method="post">
+              {% csrf_token %}
+              <input type="label" name="fine" id="fine_id"/>
+              <input type="submit" value="Validate" />
+            </form>
+          </td>
+        </tr>
+    </table>
+  {% else %}
+    <p No info from this player. </p>
+  {% endif %}
+{% endblock %}

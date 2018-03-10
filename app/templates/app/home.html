@@ -1,0 +1,15 @@
+{% extends "app/base.html" %}
+
+{% block content %}
+  {% if list_team %}
+    <ul>
+      {% for team in list_team %}
+        <li>
+          <a href="{% url 'players' team.id %}"> {{ team.team_name }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p No team created. </p>
+  {% endif %}
+{% endblock %}
