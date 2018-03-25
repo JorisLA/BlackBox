@@ -24,5 +24,5 @@ urlpatterns = [
     url(r'^signup/$', signup, name='signup'),
     url(r'^logout/$', LogoutView.as_view(), name='logout'),
     url(r'^admin/', admin.site.urls),
-    url(r'^app/', include('app.urls'))
+    url(r'^app/', include('app.urls'), name='home')
 ]

@@ -10,6 +10,7 @@
       {% endfor %}
     </ul>
   {% else %}
-    <p No team created. </p>
+    <p> No team created. </p>
   {% endif %}
+  <a href="{% url 'team' %}" class="button button5" >Add team</a>
 {% endblock %}

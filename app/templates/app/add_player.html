@@ -1,0 +1,9 @@
+{% extends "app/base.html" %}
+
+{% block content %}
+    <form method="post" role="form" action="{% url 'players' team_id %}" class="signupform">
+    {% csrf_token %}
+        <input type="text" name="playername" placeholder="Player name">
+        <button type="submit">Ok</button>
+    </form>
+{% endblock %}

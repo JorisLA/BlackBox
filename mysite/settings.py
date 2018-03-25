@@ -71,14 +71,27 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
+SITE_ROOT = os.path.dirname(os.path.realpath(__file__))     # This folder absolute path (folder "store")
+GIT_ROOT = os.path.dirname(SITE_ROOT)                       # Git root absolute path
+ROOT_CONFIG = os.path.join(GIT_ROOT, 'config')   
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#    }
+#}
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': os.environ.get('ADE_BDD_ENG', 'django.db.backends.sqlite3'),
+        'HOST': os.environ.get('ADE_BDD_SVR', None),
+        'NAME': os.environ.get('ADE_BDD_NAM', os.path.join(ROOT_CONFIG, 'store.sql3')),
+        'USER': os.environ.get('ADE_BDD_USR', None),
+        'PASSWORD': os.environ.get('ADE_BDD_PWD', None),
+        'CONN_MAX_AGE': 0,
     }
 }
 

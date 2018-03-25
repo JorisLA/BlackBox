@@ -13,21 +13,55 @@ from app.models import Team, Player
 
 @login_required
 def home(request):
-    list_team = get_list_or_404(Team)
+    """
+    """
+    list_team = Team.objects.all()
     context = { 'list_team' : list_team }
     return render(request, 'app/home.html', context)
 
 @login_required
-def players(request, team_id):
-    list_players = get_list_or_404(Player, team=team_id)
-    context = {
-        'list_players' : list_players,
-        'team_id': team_id
-    }
+def players(
+    request,
+    team_id,
+):
+    """
+    """
+    team_instance = Team.objects.get(id=team_id)
+    if request.method == 'POST':
+        player_name = request.POST.get('playername', False)
+        if player_name:
+            player = Player()
+            player.team = team_instance
+            player.player_name = player_name
+            player.save()
+            return HttpResponseRedirect(reverse('player', args=(team_id,)))
+        else:
+            return render(request, 'app/add_player.html', {'team_id':team_id})
+    else:
+        list_players = Player.objects.all().filter(team=team_instance)
+        context = {
+            'list_players' : list_players,
+            'team_id': team_id
+        }
     return render(request, 'app/list_players.html', context)
 
 @login_required
-def player(request, team_id, player_id):
+def add_player(
+    request,
+    team_id,
+):
+    """
+    """
+    return render(request, 'app/add_player.html', {'team_id':team_id})
+
+@login_required
+def player(
+    request,
+    team_id,
+    player_id,
+):
+    """
+    """
     info_player = get_object_or_404(Player, id=player_id)
     context = {
         'info_player' : info_player,
@@ -36,14 +70,25 @@ def player(request, team_id, player_id):
     return render(request, 'app/info_player.html', context)
 
 @login_required
-def fine(request, team_id, player_id):
+def fine(
+    request,
+    team_id,
+    player_id,
+):
+    """
+    """
     info_player = get_object_or_404(Player, id=player_id)
     info_player.monthly_fine += int(request.POST['fine'])
     info_player.save()
     return HttpResponseRedirect(reverse('info_player', args=(team_id, player_id)))
 
 @login_required
-def report(request, team_id):
+def report(
+    request,
+    team_id,
+):
+    """
+    """
     list_players = get_list_or_404(Player, team=team_id)
     for player in list_players:
         player.total_fine += player.monthly_fine
@@ -57,3 +102,20 @@ def report(request, team_id):
         fail_silently=False,
     )
     return HttpResponseRedirect(reverse('players', args=(team_id,)))
+
+@login_required
+def team(request):
+    """
+    """
+    if request.method == 'POST':
+        team_name = request.POST.get('teamname', False)
+        if team_name:
+            new_team = Team()
+            new_team.team_name = team_name
+            new_team.save()
+            return HttpResponseRedirect(reverse('players', args=(new_team.id,)))
+        else:
+            return render(request, 'app/add_team.html')
+    else:
+        return render(request, 'app/add_team.html')
+   

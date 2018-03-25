@@ -1,0 +1,45 @@
+---
+- hosts: localhost
+  become: yes
+
+  tasks:
+
+    - name: add zshrc lines for developer
+      lineinfile:
+        dest="/home/vagrant/.zshrc"
+        line="{{ item }}"
+        insertafter=EOF
+      with_items:
+        - "source {{ ansible_env.VIRTUAL_ENV_PATH }}/bin/activate"
+        - "cd {{ ansible_env.APP_PATH }}"
+
+    - name: install list of packages
+      apt: name={{item}} state=installed
+      with_items:
+        - libpython3-dev
+        - python-pip
+        - python3-dev
+
+    - name: install mysql-client
+      apt:
+        name=mysql-client
+        state=present
+        update_cache=yes
+
+    - name: install libmysqlclient-dev
+      apt:
+        name=libmysqlclient-dev
+        state=present
+        update_cache=yes
+
+    - name: install tox
+      pip:
+        name=tox
+        state=latest
+
+    - name: creating tox environment
+      shell: >
+        tox -r -e {{ ansible_env.ENV_NAME }}
+      args:
+        chdir: "{{ ansible_env.APP_PATH }}"
+        creates: "{{ ansible_env.VIRTUAL_ENV_PATH }}"

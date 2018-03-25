@@ -14,6 +14,7 @@
       <input type="submit" value="Send" />
     </form>
   {% else %}
-    <p No players in this team. </p>
+    <p> No players in this team. </p>
   {% endif %}
+  <a href="{% url 'player' team_id=team_id %}" class="button button5" >Add player</a>
 {% endblock %}
